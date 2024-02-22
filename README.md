@@ -6,6 +6,7 @@
 
 - Users can sign in using username and password
 - Users can sign out
+- Users can sign up
 - Authenticated users can set a contact link
 - Authenticated users can add a card from the Pokemon base set to their library
   - and specify the condition and price of their cards
@@ -17,6 +18,7 @@
 
 ## V1
 
+- Turn email confirmation back on
 - Users can sign in with Facebook SSO
 - Authenticated users can add a photo of their cards to the library
 - Authenticated users can pay to add unlimited cards to their library

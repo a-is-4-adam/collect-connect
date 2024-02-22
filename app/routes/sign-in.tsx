@@ -65,7 +65,7 @@ export async function action({ request }: ActionFunctionArgs) {
   });
 }
 
-export default function Login() {
+export default function SignIn() {
   const lastResult = useActionData<typeof action>();
   const [form, fields] = useForm({
     lastResult,
@@ -97,7 +97,7 @@ export default function Login() {
             </Label>
             <div id={fields.password.errorId}>{fields.password.errors}</div>
           </div>
-          <Button>Login</Button>
+          <Button>Sign In</Button>
         </Form>
       </section>
     </div>

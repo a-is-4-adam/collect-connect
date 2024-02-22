@@ -49,18 +49,33 @@ export default function App() {
             <ul>
               <li>
                 {data.user ? (
-                  <Form method="post" action="/logout">
+                  <Form method="post" action="/sign-out">
                     <Button
                       variant="link"
                       className="font-semibold text-blue-600"
                     >
-                      Logout
+                      Sign out
                     </Button>
                   </Form>
                 ) : (
-                  <Link className="font-semibold text-blue-600" to="/login">
-                    Login
-                  </Link>
+                  <ul className="flex divide-x border-solid divide-gray-400">
+                    <li className="pr-2">
+                      <Link
+                        className="font-semibold text-blue-600"
+                        to="/sign-in"
+                      >
+                        Sign in
+                      </Link>
+                    </li>
+                    <li className="pl-2">
+                      <Link
+                        className="font-semibold text-blue-600"
+                        to="/sign-up"
+                      >
+                        Sign up
+                      </Link>
+                    </li>
+                  </ul>
                 )}
               </li>
             </ul>
