@@ -1,5 +1,6 @@
 import { env } from "~/src/env";
 import { createServerClient, serialize, parse } from "@supabase/ssr";
+import { Database } from "./types";
 
 type CreateSupabaseClientArgs =
   | {
@@ -15,7 +16,7 @@ export function createSupabaseClient(args: CreateSupabaseClientArgs) {
     : args.cookies;
   const headers = isRequestArg ? new Headers() : args.headers;
 
-  const supabaseClient = createServerClient(
+  const supabaseClient = createServerClient<Database>(
     env.SUPABASE_URL,
     env.SUPABASE_PUBLIC_ANON_KEY,
     {
