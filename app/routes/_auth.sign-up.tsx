@@ -4,9 +4,13 @@ import { z } from "zod";
 import { createSupabaseClient } from "~/src/modules/database/client";
 import { getZodConstraint, parseWithZod } from "@conform-to/zod";
 import { useForm, getFormProps, getInputProps } from "@conform-to/react";
-import { Button } from "~/ui/button";
-import { Label } from "~/ui/label";
-import { Input } from "~/ui/input";
+import { Button } from "~/ui/Button";
+import { Label } from "~/ui/Label";
+import { Input } from "~/ui/Input";
+import { Text } from "~/ui/Text";
+import { Stack } from "~/ui/Stack";
+import { Link } from "~/ui/Link";
+import { InputGroup } from "~/ui/InputGroup";
 
 const schema = z.object({
   email: z
@@ -15,7 +19,7 @@ const schema = z.object({
   password: z
     .string({ required_error: "Password is required" })
     .min(6, "Password is too short"),
-  name: z.string({ required_error: "Name is required" }).optional(),
+  name: z.string({ required_error: "Name is required" }),
 });
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -23,7 +27,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.search);
-  const redirectURI = searchParams.get("redirect_uri") ?? "/";
+  const redirectURI = searchParams.get("redirect_uri") ?? "/dashboard";
 
   const formData = await request.formData();
   const submission = parseWithZod(formData, { schema });
@@ -52,18 +56,15 @@ export async function action({ request }: ActionFunctionArgs) {
     });
   }
 
-  const organisation_id = crypto.randomUUID();
+  const store_id = crypto.randomUUID();
 
-  const data = await supabaseClient.rpc(
-    "insert_organisation_profile_on_signup",
-    {
-      user_id_input: user.id,
-      profile_name_input: submission.value.name,
-      organisation_id_input: organisation_id,
-      organisation_display_name_input: organisation_id,
-      organisation_slug_input: organisation_id,
-    }
-  );
+  await supabaseClient.rpc("insert_store_profile_on_signup", {
+    user_id_input: user.id,
+    profile_name_input: submission.value.name,
+    store_id_input: store_id,
+    store_display_name_input: store_id,
+    store_slug_input: store_id,
+  });
 
   return redirect(redirectURI, {
     headers,
@@ -83,34 +84,42 @@ export default function SignUp() {
   });
 
   return (
-    <div className="flex justify-center items-center h-svh">
-      <section className="max-w-xl w-full">
-        <Form method="POST" {...getFormProps(form)}>
-          <div id={form.errorId}>{form.errors}</div>
-          <div className="space-y-3">
-            <Label htmlFor={fields.name.id}>
-              Name
+    <Stack space="32">
+      <Stack space="12">
+        <Text asChild size="heading-sm" weight="semibold">
+          <h2>Get started</h2>
+        </Text>
+        <Text className="text-gray-600">Create a new account</Text>
+      </Stack>
+      <Form method="POST" {...getFormProps(form)}>
+        <Stack space="24">
+          <Stack space="20">
+            <InputGroup>
+              <Label htmlFor={fields.name.id}>Your name</Label>
               <Input {...getInputProps(fields.name, { type: "text" })} />
-            </Label>
-            <div id={fields.name.errorId}>{fields.name.errors}</div>
+              <div id={fields.name.errorId}>{fields.name.errors}</div>
+            </InputGroup>
 
-            <Label htmlFor={fields.email.id}>
-              Email
+            <InputGroup>
+              <Label htmlFor={fields.email.id}>Email</Label>
               <Input {...getInputProps(fields.email, { type: "email" })} />
-            </Label>
-            <div id={fields.email.errorId}>{fields.email.errors}</div>
+              <div id={fields.email.errorId}>{fields.email.errors}</div>
+            </InputGroup>
 
-            <Label htmlFor={fields.password.id}>
-              Password
+            <InputGroup>
+              <Label htmlFor={fields.password.id}>Password</Label>
               <Input
                 {...getInputProps(fields.password, { type: "password" })}
               />
-            </Label>
-            <div id={fields.password.errorId}>{fields.password.errors}</div>
-          </div>
+              <div id={fields.password.errorId}>{fields.password.errors}</div>
+            </InputGroup>
+          </Stack>
           <Button>Sign Up</Button>
-        </Form>
-      </section>
-    </div>
+        </Stack>
+      </Form>
+      <Text align="center" className="text-gray-600">
+        Have an account? <Link to="/sign-in">Sign in now</Link>
+      </Text>
+    </Stack>
   );
 }

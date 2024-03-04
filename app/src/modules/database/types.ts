@@ -9,66 +9,6 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      organisation: {
-        Row: {
-          contact_link: string | null
-          created_at: string
-          display_name: string
-          id: string
-          slug: string
-          updated_at: string
-        }
-        Insert: {
-          contact_link?: string | null
-          created_at?: string
-          display_name: string
-          id?: string
-          slug: string
-          updated_at?: string
-        }
-        Update: {
-          contact_link?: string | null
-          created_at?: string
-          display_name?: string
-          id?: string
-          slug?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      organisation_profile: {
-        Row: {
-          created_at: string
-          organisation_id: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          organisation_id?: string
-          user_id?: string
-        }
-        Update: {
-          created_at?: string
-          organisation_id?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "public_organisation_profile_organisation_id_fkey"
-            columns: ["organisation_id"]
-            isOneToOne: false
-            referencedRelation: "organisation"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "public_organisation_profile_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profile"
-            referencedColumns: ["user_id"]
-          }
-        ]
-      }
       profile: {
         Row: {
           created_at: string
@@ -95,6 +35,66 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "users"
             referencedColumns: ["id"]
+          }
+        ]
+      }
+      store: {
+        Row: {
+          contact_link: string | null
+          created_at: string
+          display_name: string
+          id: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          contact_link?: string | null
+          created_at?: string
+          display_name: string
+          id?: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          contact_link?: string | null
+          created_at?: string
+          display_name?: string
+          id?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      store_profile: {
+        Row: {
+          created_at: string
+          store_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          store_id?: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          store_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_organisation_profile_organisation_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "store"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_organisation_profile_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profile"
+            referencedColumns: ["user_id"]
           }
         ]
       }
@@ -152,6 +152,23 @@ export type Database = {
               name: string
             }[]
           }
+      insert_store_profile_on_signup: {
+        Args: {
+          user_id_input: string
+          profile_name_input: string
+          store_id_input: string
+          store_display_name_input: string
+          store_slug_input: string
+        }
+        Returns: {
+          user_id: string
+          store_id: string
+          display_name: string
+          slug: string
+          contact_link: string
+          name: string
+        }[]
+      }
       test: {
         Args: Record<PropertyKey, never>
         Returns: string

@@ -7,6 +7,8 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "text-white bg-brand-600 hover:bg-brand-700",
+        link: "text-brand-700 font-medium",
+        ghost: "",
       },
       size: {
         lg: "px-20 py-12",
@@ -27,10 +29,19 @@ const buttonVariants = cva(
 type ButtonProps = ComponentProps<"button"> &
   VariantProps<typeof buttonVariants>;
 
-export function Button({ variant, size, width, ...props }: ButtonProps) {
+export function Button({
+  variant,
+  size,
+  width,
+  className,
+  ...props
+}: ButtonProps) {
   return (
     <Text asChild weight="semibold" size="text-md">
-      <button className={buttonVariants({ variant, size, width })} {...props} />
+      <button
+        className={buttonVariants({ variant, size, width, className })}
+        {...props}
+      />
     </Text>
   );
 }

@@ -21,7 +21,7 @@ module.exports = {
   },
 
   // Base config
-  extends: ["eslint:recommended"],
+  extends: ["eslint:recommended", "plugin:storybook/recommended"],
 
   overrides: [
     // React
@@ -46,6 +46,9 @@ module.exports = {
         "import/resolver": {
           typescript: {},
         },
+      },
+      rules: {
+        "jsx-a11y/label-has-associated-control": "off",
       },
     },
 

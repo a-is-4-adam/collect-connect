@@ -1,10 +1,7 @@
 import { LoaderFunctionArgs, json, redirect } from "@remix-run/node";
 import { createSupabaseClient } from "./client";
 
-export async function getOrganisationBySlug({
-  request,
-  params,
-}: LoaderFunctionArgs) {
+export async function getStoreBySlug({ request, params }: LoaderFunctionArgs) {
   const { supabaseClient } = createSupabaseClient(request);
 
   const { data } = await supabaseClient.auth.getSession();
@@ -16,31 +13,29 @@ export async function getOrganisationBySlug({
   const { slug } = params;
 
   if (!slug) {
-    throw redirect("/organisation");
+    throw redirect("/dashboard");
   }
 
-  const { data: organisations, error } = await supabaseClient
-    .from("organisation")
-    .select(
-      "display_name, contact_link, organisation_profile(organisation_id, user_id)"
-    )
+  const { data: stores, error } = await supabaseClient
+    .from("store")
+    .select("display_name, contact_link, store_profile(store_id, user_id)")
     .eq("slug", slug);
 
   if (error) {
     throw json(error.message, 500);
   }
 
-  if (organisations.length === 0) {
-    throw new Response("Organsation not found", { status: 404 });
+  if (stores.length === 0) {
+    throw new Response("Store not found", { status: 404 });
   }
 
   if (
-    organisations[0].organisation_profile.some(
+    stores[0].store_profile.some(
       ({ user_id }) => user_id === data.session.user.id
     )
   ) {
     return {
-      organisation: organisations[0],
+      store: stores[0],
     };
   }
 
