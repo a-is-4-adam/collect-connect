@@ -9,6 +9,79 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      inventory_item: {
+        Row: {
+          created_at: string
+          id: string
+          item_id: string
+          profile_id: string | null
+          status: Database["public"]["Enums"]["inventory_item_status"]
+          store_id: string
+          tags: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_id?: string
+          profile_id?: string | null
+          status?: Database["public"]["Enums"]["inventory_item_status"]
+          store_id?: string
+          tags?: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_id?: string
+          profile_id?: string | null
+          status?: Database["public"]["Enums"]["inventory_item_status"]
+          store_id?: string
+          tags?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_inventory_item_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "item"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_inventory_item_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profile"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "public_inventory_item_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "store"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      item: {
+        Row: {
+          created_at: string
+          id: string
+          tags: Json
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          tags?: Json
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          tags?: Json
+        }
+        Relationships: []
+      }
       profile: {
         Row: {
           created_at: string
@@ -98,21 +171,6 @@ export type Database = {
           }
         ]
       }
-      test: {
-        Row: {
-          created_at: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          user_id?: string
-        }
-        Update: {
-          created_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
     }
     Views: {
       [_ in never]: never
@@ -173,13 +231,6 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
-      test1: {
-        Args: Record<PropertyKey, never>
-        Returns: {
-          created_at: string
-          user_id: string
-        }[]
-      }
       test2:
         | {
             Args: Record<PropertyKey, never>
@@ -233,7 +284,7 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      inventory_item_status: "available" | "pending" | "sold" | "draft"
     }
     CompositeTypes: {
       [_ in never]: never

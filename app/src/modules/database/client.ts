@@ -1,6 +1,7 @@
 import { env } from "~/src/env";
 import { createServerClient, serialize, parse } from "@supabase/ssr";
 import { Database } from "./types";
+import { SupabaseClient as SupabaseClientType } from "@supabase/supabase-js";
 
 type CreateSupabaseClientArgs =
   | {
@@ -40,3 +41,5 @@ export function createSupabaseClient(args: CreateSupabaseClientArgs) {
     cookies,
   };
 }
+
+export type SupabaseClient = SupabaseClientType<Database, "public">;

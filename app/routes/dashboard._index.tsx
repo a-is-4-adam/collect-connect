@@ -5,28 +5,27 @@ import { ChevronRight } from "lucide-react";
 import { Link } from "~/ui/Link";
 import { LoaderFunctionArgs, json } from "@remix-run/node";
 import { createSupabaseClient } from "~/src/modules/database/client";
+import { getUser } from "~/src/modules/database/getUser";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const { supabaseClient } = createSupabaseClient(request);
-  const { data } = await supabaseClient.auth.getSession();
+  const user = await getUser(supabaseClient);
 
-  if (data.session) {
-    const { data: stores } = await supabaseClient
-      .from("store_profile")
-      .select(
-        `
-          store (id, slug, display_name)
-        `
-      )
-      .eq("user_id", data.session.user.id);
+  const { data: store } = await supabaseClient
+    .from("store_profile")
+    .select(
+      `
+        store (id, slug, display_name)
+      `
+    )
+    .eq("user_id", user.id)
+    .single();
 
-    if (!stores || !stores.length) {
-      throw Error("No store created for user");
-    }
-
-    return json(stores);
+  if (!store) {
+    throw Error("No store created for user");
   }
-  throw new Response(null, { status: 401 });
+
+  return json(store);
 }
 
 export default function DashboardIndex() {

@@ -29,14 +29,15 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
           store (id, slug, display_name, contact_link)
         `
       )
-      .eq("user_id", data.session.user.id)
       .eq("store.slug", storeSlug);
 
-    if (!stores || !stores.length) {
+    const firstStore = stores?.[0].store;
+
+    if (!firstStore) {
       throw Error("No store created for user");
     }
 
-    return json(stores[0].store);
+    return json(firstStore);
   }
   throw new Response(null, { status: 401 });
 }
@@ -65,7 +66,9 @@ export default function DashboardStore() {
           </div>
           <Text className="text-gray-600">{store.slug}</Text>
         </div>
-        <Outlet context={store satisfies CurrentStore} />
+        <div>
+          <Outlet context={store satisfies CurrentStore} />
+        </div>
       </Stack>
     </>
   );

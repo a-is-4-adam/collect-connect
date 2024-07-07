@@ -22,10 +22,6 @@ const schema = z.object({
   id: z.string({ required_error: "Stop messing with my form" }),
 });
 
-export function loader() {
-  return null;
-}
-
 export async function action({ request }: ActionFunctionArgs) {
   const { supabaseClient } = createSupabaseClient(request);
 
